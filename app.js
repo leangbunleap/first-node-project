@@ -1,9 +1,18 @@
-const EventEmitter = require('events');
+const http = require('http');
 
-const customEmitter = new EventEmitter();
+const {readFileSync} = require('fs');
 
-customEmitter.on('response', ()=>{
-    console.log(`data recieved`);
+const homePage = readFileSync('./index.html');
+
+const server = http.createServer((req, res) => {
+    const url = req.url;
+    if(url == '/'){
+        res.writeHead(200, {'content-type': 'text/html'});
+        res.write(homePage);
+        res.end();
+    } else {
+        res.end('page not found');
+    }
 })
 
-customEmitter.emit('response');
+server.listen(5000);
